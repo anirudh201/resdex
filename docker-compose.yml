@@ -1,0 +1,27 @@
+services:
+  backend:
+    build: ./backend
+    container_name: resdex-backend
+    ports:
+      - "5000:5000"
+    # mount the whole backend directory into /app so data.json and code are consistent
+    volumes:
+      - ./backend:/app
+    networks:
+      - resdex-net
+
+  frontend:
+    build: ./frontend
+    container_name: resdex-frontend
+    environment:
+      - BACKEND_URL=http://backend:5000
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    networks:
+      - resdex-net
+
+networks:
+  resdex-net:
+    driver: bridge
